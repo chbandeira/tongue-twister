@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Home
+{% endblock %}
+
+{% block main %}
+
+<div class="list-group list-group-flush">
+	<p class="h2">History</p>
+	{% if not history %}
+		<p>Nothing yet</p>
+	{% else %}
+		<form action="/history" method="POST">
+			<div class="alert alert-warning text-left" role="alert">
+				<button type="submit" class="btn btn-danger">Delete all</button>
+				<span style="padding: 1rem;">You will lost all your history and your score will be 0.</span>
+			</div>
+		</form>
+	{% endif %}
+	{% for item in history %}
+		<a href="history?item={{item['id']}}" class="list-group-item list-group-item-action">
+			<div class="d-flex w-100 justify-content-between align-items-center">
+				<p class="mb-1 text-left">
+					<strong><i>You said:</i></strong>
+					<br>{{ item["user_speech_html"]|safe }}
+				</p>
+				{% if item["score"] != None %} 
+					<span class="badge badge-success badge-pill">{{ "{:.1f}%".format(item["score"]) }}</span>
+				{% endif %}
+			</div>
+			<p class="mb-1 text-left">
+				<strong><i>Original:</i></strong>
+				<br>{{ item["original_phrase_html"]|safe }}
+			</p>
+		</a>
+	{% endfor %}
+</div>
+
+{% endblock %}
